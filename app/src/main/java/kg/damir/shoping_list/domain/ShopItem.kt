@@ -1,7 +1,6 @@
 package kg.damir.shoping_list.domain
 
 data class ShopItem(
-
     var name: String,
     var count: Int,
     var enabled: Boolean,
