@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         shopListAdapter.onShopItemClickListener = {
-            Log.d("MainActivity", it.toString())
             val intent = ShopItemActivity.newIntentEditItem(this,it.id)
             startActivity(intent)
         }
@@ -82,7 +81,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupLongClickListener() {
         shopListAdapter.onShopItemLongClickListener = {
-            println("click")
             viewModel.changeEnableState(it)
         }
     }
