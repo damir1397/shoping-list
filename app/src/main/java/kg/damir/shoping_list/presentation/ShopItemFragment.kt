@@ -19,6 +19,7 @@ import kg.damir.shoping_list.domain.ShopItem
 class ShopItemFragment : Fragment() {
 
     private lateinit var viewModel: ShopItemViewModel
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
@@ -27,6 +28,16 @@ class ShopItemFragment : Fragment() {
     private lateinit var buttonSave: Button
     private var screenMode: String = MODE_UNKNOWN
     private var shopItemId: Int = ShopItem.UNDEFINED_ID
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishedListener) {
+            onEditingFinishedListener = context
+        }else{
+            throw RuntimeException("Activity must implement OnEditingFinishedListener")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +81,7 @@ class ShopItemFragment : Fragment() {
         }
 
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            (activity as MainActivity)?.onEditingFinished()
         }
     }
 
@@ -123,17 +134,6 @@ class ShopItemFragment : Fragment() {
         }
     }
 
-//    private fun parseIntent() {
-//        if (screenMode != MODE_EDIT && screenMode != MODE_ADD) {
-//            throw RuntimeException("Param screen mode is absent")
-//        }
-//
-//        if (screenMode == MODE_EDIT && shopItemId == ShopItem.UNDEFINED_ID) {
-//            throw RuntimeException("Param shop item id is absent")
-//        }
-//    }
-
-
     private fun parseParam() {
         val args = requireArguments()
         if (!args.containsKey(SCREEN_MODE)) {
@@ -161,6 +161,10 @@ class ShopItemFragment : Fragment() {
         buttonSave = view.findViewById(R.id.save_button)
     }
 
+    interface OnEditingFinishedListener {
+        fun onEditingFinished()
+    }
+
     companion object {
         private const val SCREEN_MODE = "extra_mode"
         private const val SHOP_ITEM_ID = "extra_shop_item_id"
@@ -180,7 +184,7 @@ class ShopItemFragment : Fragment() {
             return ShopItemFragment().apply {
                 arguments = Bundle().apply {
                     putString(SCREEN_MODE, MODE_EDIT)
-                    putString(SHOP_ITEM_ID, shopItemId.toString())
+                    putInt(SHOP_ITEM_ID, shopItemId)
                 }
             }
         }
