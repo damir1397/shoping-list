@@ -2,7 +2,9 @@ package kg.damir.shoping_list.data
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import kg.damir.shoping_list.domain.ShopItem
 import kg.damir.shoping_list.domain.ShopListRepository
 import kotlin.random.Random
@@ -28,6 +30,17 @@ class ShopListRepositoryImpl(application: Application) : ShopListRepository {
         return mapper.mapDbModelToEntity(dbModel)
 
     }
-    override fun getShopList(): LiveData<List<ShopItem>> = shopListDao.getShopList()
+
+    override fun getShopList(): LiveData<List<ShopItem>> =
+        Transformations.map(shopListDao.getShopList()) {
+            mapper.mapListDbModelToListEntity(it)
+        }
+
+
+//    MediatorLiveData<List<ShopItem>>().apply { преобразует LiveDate<List<ShopItemDbModel>>  в LiveDate<List<ShopItem>> перехватывая LiveDate
+//        addSource(shopListDao.getShopList()) {
+//            value = mapper.mapListDbModelToListEntity(it)
+//        }
+//    }
 
 }

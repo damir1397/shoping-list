@@ -1,5 +1,7 @@
 package kg.damir.shoping_list.presentation
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import kg.damir.shoping_list.data.ShopListRepositoryImpl
 import kg.damir.shoping_list.domain.DeleteShopItemUseCase
@@ -7,9 +9,9 @@ import kg.damir.shoping_list.domain.EditShopItemUseCase
 import kg.damir.shoping_list.domain.GetShopListUseCase
 import kg.damir.shoping_list.domain.ShopItem
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ShopListRepositoryImpl
+    private val repository = ShopListRepositoryImpl(application)
 
     private val getShopListUseCase = GetShopListUseCase(repository)
     private val deleteShopItemUseCase = DeleteShopItemUseCase(repository)
