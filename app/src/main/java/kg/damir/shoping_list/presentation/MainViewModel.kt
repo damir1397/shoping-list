@@ -2,12 +2,13 @@ package kg.damir.shoping_list.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kg.damir.shoping_list.data.ShopListRepositoryImpl
 import kg.damir.shoping_list.domain.DeleteShopItemUseCase
 import kg.damir.shoping_list.domain.EditShopItemUseCase
 import kg.damir.shoping_list.domain.GetShopListUseCase
 import kg.damir.shoping_list.domain.ShopItem
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -21,12 +22,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun deleteShopItem(shopItem: ShopItem) {
-        deleteShopItemUseCase.deleteShopItem(shopItem)
+        viewModelScope.launch {
+            deleteShopItemUseCase.deleteShopItem(shopItem)
+        }
     }
 
 
     fun changeEnableState(shopItem: ShopItem) {
-        val newItem = shopItem.copy(enabled = !shopItem.enabled)
-        editShopItemUseCase.editShopItem(newItem)
+        viewModelScope.launch {
+            val newItem = shopItem.copy(enabled = !shopItem.enabled)
+            editShopItemUseCase.editShopItem(newItem)
+        }
     }
 }
